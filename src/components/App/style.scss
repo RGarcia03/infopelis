@@ -1,0 +1,8 @@
+.app {
+  &-content {
+    height: calc(100vh - 64px);
+    padding: 20px 10%;
+    background-color: gray;
+    overflow-y: auto;
+  }
+}
