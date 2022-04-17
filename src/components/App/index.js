@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { Layout } from 'antd';
 import HeaderComponent from '../Header';
 import { Movies } from '../../views/movies';
@@ -7,7 +8,14 @@ import './style.scss';
 const { Content } = Layout;
 
 function App() {
+  const navigate = useNavigate();
   const [yScroll, setYScroll] = useState(0);
+
+  const onSearch = (value) => {
+    if (value) {
+      navigate(`/search?query=${value}`);
+    }
+  };
 
   const onScroll = (d) => {
     const scrollTop = d.target.offsetHeight + d.target.scrollTop;
@@ -18,9 +26,17 @@ function App() {
   return (
     <Fragment>
       <Layout className="app">
-        <HeaderComponent></HeaderComponent>
+        <HeaderComponent onSearch={onSearch}></HeaderComponent>
         <Content className="app-content" onScroll={onScroll}>
-          <Movies yScroll={yScroll} />
+          <Routes>
+            <Route exact path="/" element={<Movies yScroll={yScroll} />} />
+            <Route
+              exact
+              path="/search"
+              element={<Movies yScroll={yScroll} />}
+            />
+            <Route path="*" element={<Navigate replace to="/" />} />
+          </Routes>
         </Content>
       </Layout>
     </Fragment>
