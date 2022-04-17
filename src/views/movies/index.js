@@ -1,34 +1,88 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button } from 'antd';
-import { getMovies } from '../../services/movies';
-import './style.scss';
+import { getMovies, searchMovies } from '../../services/movies';
 import { Movie } from '../../components/Movie';
+import './style.scss';
 
 export function Movies(props) {
+  const { search } = useLocation();
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [autoLoad, setAutoLoad] = useState(false);
 
   useEffect(() => {
-    loadMovies(true);
+    loadMovies(true, true);
   }, []);
 
   useEffect(() => {
     if (props.yScroll && autoLoad) {
-      loadMovies(false);
+      refreshMovies();
     }
   }, [props.yScroll]);
 
-  const loadMovies = (loadMovies) => {
+  useEffect(() => {
+    resetData();
+
+    if (search) {
+      const query = new URLSearchParams(search).get('query');
+      if (query) {
+        searchMoviesAux(true, true, query);
+      }
+    } else {
+      loadMovies(true, true);
+    }
+  }, [search]);
+
+  const resetData = () => {
+    setMovies([]);
+    setTotalPages(0);
+    setCurrentPage(1);
+    setAutoLoad(false);
+  };
+
+  const loadMovies = (reset, loadMovies) => {
     if (loadMovies || currentPage <= totalPages) {
-      getMovies(currentPage).then((res) => {
-        setMovies([...movies, ...res.results]);
+      getMovies(reset ? 1 : currentPage).then((res) => {
+        if (reset) {
+          setMovies(res.results);
+          setCurrentPage(2);
+        } else {
+          setMovies([...movies, ...res.results]);
+          setCurrentPage(currentPage + 1);
+        }
         setTotalPages(res.total_pages);
-        setCurrentPage(currentPage + 1);
         setAutoLoad(!loadMovies);
       });
+    }
+  };
+
+  const searchMoviesAux = (reset, loadMovies, movie) => {
+    if (loadMovies || currentPage <= totalPages) {
+      searchMovies(movie, reset ? 1 : currentPage).then((res) => {
+        if (reset) {
+          setMovies(res.results);
+          setCurrentPage(2);
+        } else {
+          setMovies([...movies, ...res.results]);
+          setCurrentPage(currentPage + 1);
+        }
+        setTotalPages(res.total_pages);
+        setAutoLoad(!loadMovies);
+      });
+    }
+  };
+
+  const refreshMovies = () => {
+    if (search) {
+      const query = new URLSearchParams(search).get('query');
+      if (query) {
+        searchMoviesAux(false, false, query);
+      }
+    } else {
+      loadMovies(false, false);
     }
   };
 
@@ -43,13 +97,11 @@ export function Movies(props) {
           );
         })}
       </div>
-      <Button
-        type="primary"
-        className="main-button"
-        onClick={() => loadMovies(false)}
-      >
-        Mostrar más
-      </Button>
+      {currentPage <= totalPages && (
+        <Button type="primary" className="main-button" onClick={refreshMovies}>
+          Mostrar más
+        </Button>
+      )}
     </div>
   );
 }

@@ -1,18 +1,28 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input, Layout } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import './style.scss';
 
 const { Header } = Layout;
+const { Search } = Input;
 
-function HeaderComponent() {
+function HeaderComponent(props) {
+  const navigate = useNavigate();
+
+  const onClickLogo = () => {
+    navigate('/');
+  };
+
   return (
     <Header className="header">
-      <span className="header-title">InfoPelis</span>
-      <Input
+      <span className="header-title" onClick={onClickLogo}>
+        InfoPelis
+      </span>
+      <Search
         className="header-input"
         placeholder="Buscar..."
-        suffix={<SearchOutlined />}
+        allowClear
+        onSearch={props.onSearch}
       />
     </Header>
   );
