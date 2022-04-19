@@ -1,0 +1,55 @@
+.detail {
+  height: 500px;
+  background-color: gray;
+  border-radius: 20px;
+  position: relative;
+
+  &-image {
+    border-radius: 20px;
+    opacity: 15%;
+  }
+
+  &-data {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    top: 0;
+
+    &-body {
+      height: 100%;
+
+      &-image {
+        align-items: center;
+        display: flex;
+        border-radius: 20px;
+      }
+  
+      &-info {
+        color: white;
+      }
+  
+      &-vote {
+        margin-top: 20px;
+        font-size: 25px;
+  
+        &-icon {
+          color: yellow !important;
+        }
+      }
+  
+      &-overview {
+        margin-top: 20px;
+        font-size: 17px;
+      }
+    }
+  }
+}
+
+.ant-modal-content {
+  border-radius: 20px;
+
+  .ant-modal-body {
+    padding: 0;
+  }
+}

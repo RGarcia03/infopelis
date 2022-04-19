@@ -27,4 +27,15 @@ const searchMovies = (movie, page) => {
     .then((response) => response && response.data);
 };
 
-export { getMovies, searchMovies };
+const getDetailMovie = (idMovie) => {
+  const url = MOVIES_ENDPOINT + idMovie;
+  const params = {
+    params: {
+      api_key: API_KEY,
+      language: LANGUAGE,
+    },
+  };
+  return axios.get(url, params).then((response) => response && response.data);
+};
+
+export { getMovies, searchMovies, getDetailMovie };
