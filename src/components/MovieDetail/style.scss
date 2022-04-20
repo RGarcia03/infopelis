@@ -32,9 +32,45 @@
       &-vote {
         margin-top: 20px;
         font-size: 25px;
+        display: flex;
+        align-items: center;
   
         &-icon {
+          margin-left: 5px;
           color: yellow !important;
+        }
+
+        &-button {
+          margin-left: 20px;
+          background-color: rgb(87, 87, 87);
+          border-color: rgb(87, 87, 87);
+          border-radius: 20px;
+        }
+
+        &-stars {
+          margin-left: 20px;
+          padding: 10px;
+          background-color: rgb(87, 87, 87);
+          border-radius: 20px;
+          display: flex;
+          flex-direction: row-reverse;
+          align-items: center;
+
+          .star {
+            font-size: 17px;
+            transition: 1s all;
+          }
+
+          .star:hover{
+            cursor: pointer;
+            color: yellow;
+            transform: rotate(360deg);
+          }
+
+          .star:hover ~ .star{
+            color: yellow;
+            transform: rotate(360deg);
+          }
         }
       }
   

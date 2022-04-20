@@ -47,6 +47,7 @@ export function Movie(props) {
         </div>
       </div>
       <Modal
+        destroyOnClose={true}
         visible={isVisible}
         onCancel={() => setIsVisible(false)}
         centered
