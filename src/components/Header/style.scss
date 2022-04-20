@@ -1,0 +1,36 @@
+@import '~antd/dist/antd.css';
+
+.header {
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-right-side {
+    display: flex;
+
+    &-title {
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 40px;
+      margin-right: 40px;
+    }
+
+    .ant-menu-item {
+      background-color: black !important;
+    }
+  }
+
+  
+
+  &-input {
+    max-width: 200px;
+    height: 32px;
+    border-radius: 30px;
+
+    .ant-input-affix-wrapper, .ant-input {
+      background-color: gray;
+    }
+  }
+}

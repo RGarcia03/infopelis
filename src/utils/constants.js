@@ -1,0 +1,5 @@
+const API_KEY = '2b841be38a58b608c27af28e31c8c561';
+const LANGUAGE = 'es-ES';
+const DATE_FORMAT = 'DD-MM-YYYY';
+
+export { API_KEY, LANGUAGE, DATE_FORMAT };
