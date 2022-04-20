@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Button } from 'antd';
 import { getMovies, searchMovies } from '../../services/movies';
-import { Movie } from '../../components/Movie';
+import { MovieList } from '../../components/MovieList';
 import './style.scss';
 
 export function Movies(props) {
@@ -12,6 +13,7 @@ export function Movies(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [autoLoad, setAutoLoad] = useState(false);
+  const ratedMovies = useSelector((store) => store.movies.ratedMovies);
 
   useEffect(() => {
     loadMovies(true, true);
@@ -46,15 +48,7 @@ export function Movies(props) {
   const loadMovies = (reset, loadMovies) => {
     if (loadMovies || currentPage <= totalPages) {
       getMovies(reset ? 1 : currentPage).then((res) => {
-        if (reset) {
-          setMovies(res.results);
-          setCurrentPage(2);
-        } else {
-          setMovies([...movies, ...res.results]);
-          setCurrentPage(currentPage + 1);
-        }
-        setTotalPages(res.total_pages);
-        setAutoLoad(!loadMovies);
+        loadMoviesAux(reset, res);
       });
     }
   };
@@ -62,17 +56,30 @@ export function Movies(props) {
   const searchMoviesAux = (reset, loadMovies, movie) => {
     if (loadMovies || currentPage <= totalPages) {
       searchMovies(movie, reset ? 1 : currentPage).then((res) => {
-        if (reset) {
-          setMovies(res.results);
-          setCurrentPage(2);
-        } else {
-          setMovies([...movies, ...res.results]);
-          setCurrentPage(currentPage + 1);
-        }
-        setTotalPages(res.total_pages);
-        setAutoLoad(!loadMovies);
+        loadMoviesAux(reset, res);
       });
     }
+  };
+
+  const loadMoviesAux = (reset, response) => {
+    response.results.forEach((movie) => {
+      const index = ratedMovies.findIndex((elem) => elem.title === movie.title);
+      if (index > -1) {
+        movie.vote_average =
+          (movie.vote_average * movie.vote_count + ratedMovies[index].vote) /
+          (movie.vote_count + 1);
+      }
+    });
+
+    if (reset) {
+      setMovies(response.results);
+      setCurrentPage(2);
+    } else {
+      setMovies([...movies, ...response.results]);
+      setCurrentPage(currentPage + 1);
+    }
+    setTotalPages(response.total_pages);
+    setAutoLoad(!loadMovies);
   };
 
   const refreshMovies = () => {
@@ -88,15 +95,7 @@ export function Movies(props) {
 
   return (
     <div className="main">
-      <div className="main-movies">
-        {movies.map((elem, i) => {
-          return (
-            <div className="main-movies-movie">
-              <Movie movie={elem} />
-            </div>
-          );
-        })}
-      </div>
+      <MovieList movies={movies} />
       {currentPage <= totalPages && (
         <Button type="primary" className="main-button" onClick={refreshMovies}>
           Mostrar más

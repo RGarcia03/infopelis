@@ -6,12 +6,23 @@
   justify-content: space-between;
   align-items: center;
 
-  &-title {
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 40px;
+  &-right-side {
+    display: flex;
+
+    &-title {
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 40px;
+      margin-right: 40px;
+    }
+
+    .ant-menu-item {
+      background-color: black !important;
+    }
   }
+
+  
 
   &-input {
     max-width: 200px;

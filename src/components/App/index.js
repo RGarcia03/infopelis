@@ -3,6 +3,7 @@ import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { Layout } from 'antd';
 import HeaderComponent from '../Header';
 import { Movies } from '../../views/movies';
+import { MyVotes } from '../../views/myVotes';
 import './style.scss';
 
 const { Content } = Layout;
@@ -35,6 +36,7 @@ function App() {
               path="/search"
               element={<Movies yScroll={yScroll} />}
             />
+            <Route exact path="/myList" element={<MyVotes />} />
             <Route path="*" element={<Navigate replace to="/" />} />
           </Routes>
         </Content>
