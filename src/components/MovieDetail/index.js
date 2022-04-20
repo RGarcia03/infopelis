@@ -7,12 +7,15 @@ import { getDetailMovie } from '../../services/movies';
 import { DATE_FORMAT } from '../../utils/constants';
 import { toaster } from '../Toaster';
 import './style.scss';
+import { useDispatch } from 'react-redux';
+import { rateMovie } from '../../store/actions';
 
 const STARS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
 export function MovieDetail(props) {
   const [movie, setMovie] = useState(null);
   const [voting, setVoting] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getDetailMovie(props.movie.id).then(setMovie);
@@ -20,6 +23,7 @@ export function MovieDetail(props) {
   }, []);
 
   const onClickStar = (number) => {
+    dispatch(rateMovie(props.movie, number));
     toaster(
       `Has valorado la película ${movie.title} con una puntuación de ${number}`
     );

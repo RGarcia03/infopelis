@@ -5,14 +5,19 @@ import App from './components/App';
 import { ConfigProvider } from 'antd';
 import es_ES from 'antd/lib/locale-provider/es_ES';
 import reportWebVitals from './reportWebVitals';
+import configureStore from './store/configureStore';
+import { Provider } from 'react-redux';
 
 const rootElement = document.getElementById('root');
+const store = configureStore();
 
 if (rootElement) {
   render(
     <HashRouter>
       <ConfigProvider locale={es_ES}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </ConfigProvider>
     </HashRouter>,
     rootElement
