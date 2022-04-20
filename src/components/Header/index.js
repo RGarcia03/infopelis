@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Layout, Menu } from 'antd';
 import './style.scss';
@@ -8,9 +8,18 @@ const { Search } = Input;
 
 function HeaderComponent(props) {
   const navigate = useNavigate();
+  const [selectedKey, setSelectedKey] = useState('home');
 
   const onClickLogo = () => {
     navigate('/');
+    setSelectedKey('home');
+  };
+
+  const onSearch = (value) => {
+    if (value) {
+      navigate(`/search?query=${value}`);
+      setSelectedKey(null);
+    }
   };
 
   return (
@@ -20,11 +29,23 @@ function HeaderComponent(props) {
           InfoPelis
         </span>
 
-        <Menu mode="horizontal" theme="dark" defaultSelectedKeys={['home']}>
-          <Menu.Item key="home" onClick={() => navigate('/')}>
+        <Menu mode="horizontal" theme="dark" selectedKeys={[selectedKey]}>
+          <Menu.Item
+            key="home"
+            onClick={() => {
+              navigate('/');
+              setSelectedKey('home');
+            }}
+          >
             Inicio
           </Menu.Item>
-          <Menu.Item key="myVotes" onClick={() => navigate('/myList')}>
+          <Menu.Item
+            key="myVotes"
+            onClick={() => {
+              navigate('/myList');
+              setSelectedKey('myVotes');
+            }}
+          >
             Mis valoraciones
           </Menu.Item>
         </Menu>
@@ -34,7 +55,7 @@ function HeaderComponent(props) {
         className="header-input"
         placeholder="Buscar..."
         allowClear
-        onSearch={props.onSearch}
+        onSearch={onSearch}
       />
     </Header>
   );
