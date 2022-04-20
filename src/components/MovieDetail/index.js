@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Row, Col } from 'antd';
+import { Image, Row, Col, Button } from 'antd';
 import { StarFilled } from '@ant-design/icons';
-import { IMAGES_DETAIL_ENDPOINT, IMAGES_ENDPOINT } from '../../services/urls';
-import './style.scss';
-import { getDetailMovie } from '../../services/movies';
 import moment from 'moment';
+import { IMAGES_DETAIL_ENDPOINT, IMAGES_ENDPOINT } from '../../services/urls';
+import { getDetailMovie } from '../../services/movies';
 import { DATE_FORMAT } from '../../utils/constants';
+import { toaster } from '../Toaster';
+import './style.scss';
+
+const STARS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
 export function MovieDetail(props) {
   const [movie, setMovie] = useState(null);
+  const [voting, setVoting] = useState(false);
 
   useEffect(() => {
     getDetailMovie(props.movie.id).then(setMovie);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onClickStar = (number) => {
+    toaster(
+      `Has valorado la película ${movie.title} con una puntuación de ${number}`
+    );
+    setVoting(false);
+  };
 
   return (
     <div className="detail">
@@ -44,7 +55,7 @@ export function MovieDetail(props) {
               <Col span={17}>
                 <h1 className="detail-data-body-info">{movie.title}</h1>
                 <div className="detail-data-body-info">
-                  <span>{moment(movie.release_data).format(DATE_FORMAT)}</span>
+                  <span>{moment(movie.release_date).format(DATE_FORMAT)}</span>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <span>
                     {movie.genres.map((elem) => elem.name).join(', ')}
@@ -54,8 +65,26 @@ export function MovieDetail(props) {
                   <span className="detail-data-body-info">
                     {movie.vote_average}
                   </span>
-                  &nbsp;
                   <StarFilled className="detail-data-body-vote-icon" />
+                  {voting ? (
+                    <div className="detail-data-body-vote-stars">
+                      {STARS.map((star, i) => (
+                        <StarFilled
+                          key={i}
+                          className="star"
+                          onClick={() => onClickStar(star)}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <Button
+                      type="primary"
+                      className="detail-data-body-vote-button"
+                      onClick={() => setVoting(true)}
+                    >
+                      Valórala
+                    </Button>
+                  )}
                 </div>
                 <p className="detail-data-body-info detail-data-body-overview">
                   {movie.overview}
